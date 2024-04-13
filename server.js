@@ -13,6 +13,7 @@ dotenv.config();
 const app = express();
 const userModel = require("./models/users");
 const profileModel = require("./models/profiles");
+const goalModel = require("./models/goals");
 
 /*=============================MIDDLEWARES==============================*/
 
@@ -343,6 +344,87 @@ app.delete("/delete_account", async (req, res) => {
     return res.json({ status: true, message: "Account deleted successfully" });
   } catch (error) {
     console.error("Error deleting account:", error);
+    return res.status(500).json({ message: "Internal Server error" });
+  }
+});
+
+/*=============================ADD NEW GOAL==============================*/
+
+app.post("/goals", async (req, res) => {
+  try {
+    const { title, description, targetDate, email } = req.body;
+
+    const newGoal = new goalModel({
+      email,
+      title,
+      description,
+      targetDate,
+    });
+
+    await newGoal.save();
+
+    return res.status(201).json(newGoal);
+  } catch (error) {
+    console.error("Error adding new goal:", error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+/*=============================GET GOALS ROUTING==============================*/
+
+app.get("/goals", async (req, res) => {
+  try {
+    const { email } = req.query;
+
+    const userGoals = await goalModel.find({ email });
+
+    return res.json(userGoals);
+  } catch (error) {
+    console.error("Error fetching user goals:", error);
+    return res.status(500).json({ message: "Internal Server error" });
+  }
+});
+
+/*=============================UPDATE GOAL ROUTING==============================*/
+
+app.put("/goals/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { title, description, targetDate } = req.body;
+
+    const updatedGoal = await goalModel.findByIdAndUpdate(
+      id,
+      { title, description, targetDate },
+      { new: true }
+    );
+
+    if (!updatedGoal) {
+      return res.status(404).json({ message: "Goal not found" });
+    }
+
+    return res.json(updatedGoal);
+  } catch (error) {
+    console.error("Error updating goal:", error);
+    return res.status(500).json({ message: "Internal Server error" });
+  }
+});
+
+/*=============================DELETE GOAL ROUTING==============================*/
+
+app.delete("/goals/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const goal = await goalModel.findById(id);
+    if (!goal) {
+      return res.status(404).json({ message: "Goal not found" });
+    }
+
+    await goalModel.findByIdAndDelete(id);
+
+    return res.json({ message: "Goal deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting goal:", error);
     return res.status(500).json({ message: "Internal Server error" });
   }
 });
