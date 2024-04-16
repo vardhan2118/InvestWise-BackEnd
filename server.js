@@ -118,13 +118,13 @@ app.post("/forgot_password", async (req, res) => {
     var transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
-        user: "cchitravardhan21@gmail.com",
-        pass: "sunvieenmlmsfnww",
+        user: "investwise884@gmail.com",
+        pass: "xqfadrmaqhcylfsj",
       },
     });
     const encodedToken = encodeURIComponent(token).replace(/\./g, "%2E");
     var mailOptions = {
-      from: "cchitravardhan21@gmail.com",
+      from: "investwise884@gmail.com",
       to: email,
       subject: "Reset Password",
       text: `http://localhost:3000/reset_password/${encodedToken}`,
@@ -169,14 +169,14 @@ app.post("/contact", async (req, res) => {
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
-        user: "cchitravardhan21@gmail.com",
-        pass: "sunvieenmlmsfnww",
+        user: "investwise884@gmail.com",
+        pass: "xqfadrmaqhcylfsj",
       },
     });
 
     const mailOptions = {
       from: email,
-      to: "cchitravardhan21@gmail.com",
+      to: "investwise884@gmail.com",
       subject: "New Contact Form Submission",
       text: `Name: ${name}\nEmail: ${email}\nMessage: ${message}`,
     };
@@ -340,6 +340,8 @@ app.delete("/delete_account", async (req, res) => {
     await userModel.findOneAndDelete({ email });
 
     await profileModel.findOneAndDelete({ email });
+
+    await goalModel.deleteMany({ email });
 
     return res.json({ status: true, message: "Account deleted successfully" });
   } catch (error) {
