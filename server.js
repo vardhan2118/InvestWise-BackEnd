@@ -14,6 +14,7 @@ const app = express();
 const userModel = require("./models/users");
 const profileModel = require("./models/profiles");
 const goalModel = require("./models/goals");
+const transactionModel = require("./models/transcations");
 
 /*=============================MIDDLEWARES==============================*/
 
@@ -431,6 +432,55 @@ app.delete("/goals/:id", async (req, res) => {
   }
 });
 
+/*=============================GET TRANSCATIONS ROUTING==============================*/
+
+app.get("/transactions", async (req, res) => {
+  try {
+    const { email } = req.query;
+    if (email) {
+      const transactions = await transactionModel.find({ email });
+      res.json(transactions);
+    }
+  } catch (err) {
+    console.error("Error fetching transactions:", err);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+/*=============================POST TRANSCATIONS ROUTING==============================*/
+
+app.post("/transactions", async (req, res) => {
+  const { type, amount, transactionType, email } = req.body;
+  try {
+    const newTransaction = new transactionModel({
+      type,
+      amount,
+      transactionType,
+      email,
+    });
+    await newTransaction.save();
+    res.json(newTransaction);
+  } catch (err) {
+    console.error("Error adding transaction:", err);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+/*=============================DELETE TRANSACTIONS ROUTING==============================*/
+
+app.delete("/transactions/:id", async (req, res) => {
+  const { id } = req.params;
+  try {
+    const deletedTransaction = await transactionModel.findByIdAndDelete(id);
+    if (!deletedTransaction) {
+      return res.status(404).send("Transaction not found");
+    }
+    res.json(deletedTransaction);
+  } catch (err) {
+    console.error("Error deleting transaction:", err);
+    res.status(500).send("Internal Server Error");
+  }
+});
 /*=============================APP LISTEN==============================*/
 
 app.listen(process.env.PORT, () => {
