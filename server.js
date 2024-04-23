@@ -344,6 +344,8 @@ app.delete("/delete_account", async (req, res) => {
 
     await goalModel.deleteMany({ email });
 
+    await transactionModel.deleteMany({ email });
+
     return res.json({ status: true, message: "Account deleted successfully" });
   } catch (error) {
     console.error("Error deleting account:", error);
