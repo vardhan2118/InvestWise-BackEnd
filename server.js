@@ -152,7 +152,6 @@ app.post("/forgot_password", async (req, res) => {
   `,
     };
 
-
     transporter.sendMail(mailOptions, function (error, info) {
       if (error) {
         console.error("Error sending email:", error);
@@ -202,10 +201,19 @@ app.post("/contact", async (req, res) => {
       to: "investwise884@gmail.com",
       subject: "New Contact Form Submission",
       html: `
-    <div>
-      <p>Name: ${name}</p>
-      <p>Email: ${email}</p>
-      <p>Message: ${message}</p>
+    <div style="max-width: 600px; margin: 0 auto; font-family: Arial, sans-serif; background-color: #f9f9f9; padding: 20px; border-radius: 10px;">
+      <div style="text-align: center; margin-bottom: 20px;">
+        <h1 style="color: #333; margin-top: 10px; margin-bottom: 5px;">Invest Wise</h1>
+        <h4 style="font-size: 16px; color: #666; margin: 0;">Personal Finance and Investment Education Platform</h4>
+      </div>
+      <div style="background-color: #ffffff; padding: 30px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+        <h2 style="color: #333; font-size: 24px; margin-bottom: 20px;">New Contact Form Submission</h2>
+        <p style="font-size: 16px; color: #333; margin-bottom: 20px;"><span style="font-weight: bold;">Name:</span> ${name}</p>
+        <p style="font-size: 16px; color: #333; margin-bottom: 20px;"><span style="font-weight: bold;">Email:</span> ${email}</p>
+        <p style="font-size: 16px; color: #333; margin-bottom: 20px;"><span style="font-weight: bold;">Message:</span> ${message}</p>
+      </div>
+      <p style="text-align: center; font-size: 14px; color: #666; margin-top: 20px;">Thanks,</p>
+      <p style="text-align: center; font-size: 14px; color: #666; margin-bottom: 0;">InvestWise Team</p>
     </div>
   `,
     };
